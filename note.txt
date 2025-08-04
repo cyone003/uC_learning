@@ -1,0 +1,7 @@
+8/3 
+I implemented the GPIO and interrupt baremetal. I am going to avoid the STM32 HAL library so that I can learn the fundamentals. 
+
+I learend that with STM32 I need to look at header files and the reference manual to get the memory addresses/macros for register access. When initializing GPIO I need to enable a clock, this is the case for all peripherals(irq and GPIO) because they are turned off to save power. From my understanding, global interrupts are already enabled on my uC. 
+I then have to set pins as output or change the values in the register so my code runs correctly. It is good practice to clear bits before setting them in a register. With interrupts, I have to map the interrupt pin to the source of the interrupt and unmask it. I then have to chose when it triggers(rising or falling edge). After a NVIC enable macro is used to 
+enable the specific irq. NVIC is what controls interrupts and it is very important to make sure you know which irq to use. In my case it was EXTI15_10_IRQn, which could be seen in the header file for my specific board. Note that it is 15-10 beacause I am using PC13 as the source of the input signal. The actual interrupt handler funciton is EXTI15_10_IRQHandler. 
+It is extremely important that we use the defined function names because with IRQ, it is mapped to the hardware, so out CPU wouldn't know what function we are using unless we define the correct name. In the IRQ we can put out condition and the result as well as clearing the interrupt. Main will just call the initialize functions and have a forever loop. 
